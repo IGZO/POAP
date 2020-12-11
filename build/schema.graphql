@@ -1,0 +1,29 @@
+type Account @entity {
+  id: ID!
+  attended: [EventOwner!]! @derivedFrom(field: "owner")
+  minted: [EventMinter!]! @derivedFrom(field: "minter")
+}
+
+type EventMinter @entity {
+  id: ID!
+  event: Event!
+  minter: Account!
+}
+
+type EventOwner @entity {
+  id: ID!
+  event: Event!
+  owner: Account!
+}
+
+type Event @entity {
+  id: ID!
+  token: Token!
+  minters: [EventMinter!]! @derivedFrom(field: "event")
+  owners: [EventOwner!]! @derivedFrom(field: "event")
+}
+
+type Token @entity {
+  id: ID!
+  event: Event!
+}

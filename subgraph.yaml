@@ -1,0 +1,43 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Poap
+    network: mainnet
+    source:
+      address: "0x22C1f6050E56d2876009903609a2cC3fEf83B415"
+      abi: Poap
+      startBlock: 7844214
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Event
+        - Token
+        - Account
+        - EventOwner
+        - EventMinter
+      abis:
+        - name: Poap
+          file: ./abis/Poap.json
+      eventHandlers:
+        - event: EventToken(uint256,uint256)
+          handler: handleEventToken
+        - event: EventMinterAdded(indexed uint256,indexed address)
+          handler: handleEventMinterAdded
+        - event: EventMinterRemoved(indexed uint256,indexed address)
+          handler: handleEventMinterRemoved
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      callHandlers:
+        - function: mintToken(uint256,address)
+          handler: handleMintToken
+        - function: mintToken(uint256,uint256,address)
+          handler: handleMint1Token
+        - function: mintUserToManyEvents(uint256[],address)
+          handler: handleMintUserToManyEvents
+        - function: mintEventToManyUsers(uint256,address[])
+          handler: handleMintEventToManyUsers
+      file: ./src/mapping.ts
